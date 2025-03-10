@@ -10,6 +10,12 @@
   <!-- Sertakan prayTimes.js secara lokal. Pastikan file "prayTimes.js" ada di lokasi ini -->
   <script src="prayTimes.js"></script>
   <style>
+    /* Hilangkan scrollbar vertikal dan horizontal */
+    html, body {
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+    }
      /* Header */
     .header {
       background-color: #005a4b;
@@ -18,6 +24,11 @@
     }
     .header img {
       max-height: 50px;
+    }
+
+    /* Optional: Hilangkan scrollbar pada elemen khusus */
+    .media-container {
+        overflow: hidden !important;
     }
     /* Carousel */
     .carousel-item {
@@ -495,31 +506,31 @@ justify-content: center;
       <!-- Form Input untuk waktu adzan -->
       <div class="mb-3">
         <label for="imsakInput" class="form-label">Imsak</label>
-        <input type="text" class="form-control" id="imsakInput" required>
+        <input type="time" class="form-control" id="imsakInput" required>
       </div>
       <div class="mb-3">
         <label for="shubuhInput" class="form-label">Shubuh</label>
-        <input type="text" class="form-control" id="shubuhInput" required>
+        <input type="time" class="form-control" id="shubuhInput" required>
       </div>
       <div class="mb-3">
         <label for="syuruqInput" class="form-label">Syuruq</label>
-        <input type="text" class="form-control" id="syuruqInput" required>
+        <input type="time" class="form-control" id="syuruqInput" required>
       </div>
       <div class="mb-3">
         <label for="dzuhurInput" class="form-label">Dzuhur</label>
-        <input type="text" class="form-control" id="dzuhurInput" required>
+        <input type="time" class="form-control" id="dzuhurInput" required>
       </div>
       <div class="mb-3">
         <label for="asharInput" class="form-label">Ashar</label>
-        <input type="text" class="form-control" id="asharInput" required>
+        <input type="time" class="form-control" id="asharInput" required>
       </div>
       <div class="mb-3">
         <label for="maghribInput" class="form-label">Maghrib</label>
-        <input type="text" class="form-control" id="maghribInput" required>
+        <input type="time" class="form-control" id="maghribInput" required>
       </div>
       <div class="mb-3">
         <label for="isyaInput" class="form-label">Isya</label>
-        <input type="text" class="form-control" id="isyaInput" required>
+        <input type="time" class="form-control" id="isyaInput" required>
       </div>
       <button type="submit" class="btn btn-primary">Update</button>
     </form>
@@ -565,39 +576,39 @@ justify-content: center;
       <h5 id="offcanvasCountdownAdzanLabel" class="ms-auto">Setting Countdown</h5>
     </div>
     <div class="offcanvas-body">
-      <form id="countdownForm">
+      <form id="AdzanCountdownForm">
         <!-- Form Input untuk waktu countdown Adzan -->
         <div class="mb-3">
-          <label for="isyaCountdown" class="form-label">Isya</label>
-          <input type="text" class="form-control" id="isyaCountdown" >
+          <label for="isyaAdzanCountdown" class="form-label">Isya</label>
+          <input type="number" class="form-control" id="isyaAdzanCountdown" >
         </div>
         <div class="mb-3">
-          <label for="shubuhCountdown" class="form-label">Shubuh</label>
-          <input type="text" class="form-control" id="shubuhCountdown" >
+          <label for="shubuhAdzanCountdown" class="form-label">Shubuh</label>
+          <input type="number" class="form-control" id="shubuhAdzanCountdown" >
         </div>
         <div class="mb-3">
-          <label for="dzuhurCountdown" class="form-label">Dzuhur</label>
-          <input type="text" class="form-control" id="dzuhurCountdown" >
+          <label for="dzuhurAdzanCountdown" class="form-label">Dzuhur</label>
+          <input type="number" class="form-control" id="dzuhurAdzanCountdown" >
         </div>
         <div class="mb-3">
-          <label for="asharCountdown" class="form-label">Ashar</label>
-          <input type="text" class="form-control" id="asharCountdown" >
+          <label for="asharAdzanCountdown" class="form-label">Ashar</label>
+          <input type="number" class="form-control" id="asharAdzanCountdown" >
         </div>
         <div class="mb-3">
-          <label for="maghribCountdown" class="form-label">Maghrib</label>
-          <input type="text" class="form-control" id="maghribCountdown" >
+          <label for="maghribAdzanCountdown" class="form-label">Maghrib</label>
+          <input type="number" class="form-control" id="maghribAdzanCountdown" >
         </div>
         <div class="mb-3">
-          <label for="jumatCountdown" class="form-label">Jumat</label>
-          <input type="text" class="form-control" id="jumatCountdown" >
+          <label for="jumatAdzanCountdown" class="form-label">Jumat</label>
+          <input type="number" class="form-control" id="jumatAdzanCountdown" >
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
       </form>
     </div>
   </div>
 
-<!-- Offcanvas Setting Countdown Iqamah -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCountdownIqamah" aria-labelledby="offcanvasCountdownIqamahLabel">
+  <!-- Offcanvas Setting Countdown Iqamah -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCountdownIqamah" aria-labelledby="offcanvasCountdownIqamahLabel">
     <div class="offcanvas-header">
       <button type="button" class="btn btn-link" data-bs-toggle="offcanvas" data-bs-target="#mainOffcanvasMenu" aria-label="Back">
         <i class="bi bi-arrow-left"></i> Back
@@ -609,28 +620,29 @@ justify-content: center;
         <!-- Form Input untuk waktu countdown Iqamah -->
         <div class="mb-3">
           <label for="isyaIqamahCountdown" class="form-label">Isya</label>
-          <input type="text" class="form-control" id="isyaIqamahCountdown">
+          <input type="number" class="form-control" id="isyaIqamahCountdown">
         </div>
         <div class="mb-3">
           <label for="shubuhIqamahCountdown" class="form-label">Shubuh</label>
-          <input type="text" class="form-control" id="shubuhIqamahCountdown">
+          <input type="number" class="form-control" id="shubuhIqamahCountdown">
         </div>
         <div class="mb-3">
           <label for="dzuhurIqamahCountdown" class="form-label">Dzuhur</label>
-          <input type="text" class="form-control" id="dzuhurIqamahCountdown">
+          <input type="number" class="form-control" id="dzuhurIqamahCountdown">
         </div>
         <div class="mb-3">
           <label for="asharIqamahCountdown" class="form-label">Ashar</label>
-          <input type="text" class="form-control" id="asharIqamahCountdown">
+          <input type="number" class="form-control" id="asharIqamahCountdown">
         </div>
         <div class="mb-3">
           <label for="maghribIqamahCountdown" class="form-label">Maghrib</label>
-          <input type="text" class="form-control" id="maghribIqamahCountdown">
+          <input type="number" class="form-control" id="maghribIqamahCountdown">
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
       </form>
     </div>
   </div>
+
 
 
 <!-- Offcanvas Setting Durasi Overlay Black -->
@@ -646,27 +658,27 @@ justify-content: center;
         <!-- Field input -->
         <div class="mb-3">
           <label for="isyaOverlay" class="form-label">Isya (menit)</label>
-          <input type="text" class="form-control" id="isyaOverlay">
+          <input type="number" class="form-control" id="isyaOverlay">
         </div>
         <div class="mb-3">
           <label for="shubuhOverlay" class="form-label">Shubuh (menit)</label>
-          <input type="text" class="form-control" id="shubuhOverlay">
+          <input type="number" class="form-control" id="shubuhOverlay">
         </div>
         <div class="mb-3">
           <label for="dzuhurOverlay" class="form-label">Dzuhur (menit)</label>
-          <input type="text" class="form-control" id="dzuhurOverlay">
+          <input type="number" class="form-control" id="dzuhurOverlay">
         </div>
         <div class="mb-3">
           <label for="asharOverlay" class="form-label">Ashar (menit)</label>
-          <input type="text" class="form-control" id="asharOverlay">
+          <input type="number" class="form-control" id="asharOverlay">
         </div>
         <div class="mb-3">
           <label for="maghribOverlay" class="form-label">Maghrib (menit)</label>
-          <input type="text" class="form-control" id="maghribOverlay">
+          <input type="number" class="form-control" id="maghribOverlay">
         </div>
         <div class="mb-3">
           <label for="jumatOverlay" class="form-label">Jumat (menit)</label>
-          <input type="text" class="form-control" id="jumatOverlay">
+          <input type="number" class="form-control" id="jumatOverlay">
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
       </form>
@@ -699,46 +711,329 @@ justify-content: center;
   <script>
 
 // Fungsi untuk memaksa fullscreen
-function enterFullscreen() {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen()
-            .catch(err => console.log("Error entering fullscreen:", err));
-    }
-}
+//function enterFullscreen() {
+  //  if (!document.fullscreenElement) {
+    //    document.documentElement.requestFullscreen()
+      //      .catch(err => console.log("Error entering fullscreen:", err));
+    //}
+//}
 
 // Panggil saat load dan setiap kali kembali ke halaman
-document.addEventListener('DOMContentLoaded', enterFullscreen);
-document.addEventListener('visibilitychange', enterFullscreen);
+//document.addEventListener('DOMContentLoaded', enterFullscreen);
+//document.addEventListener('visibilitychange', enterFullscreen);
 
 
     // Inisialisasi jadwal sebagai objek kosong; nanti akan di-update otomatis
     let adzanSchedule = {};
-    // Menyimpan durasi countdown dalam satuan menit (default: 10 menit)
-    // Variabel global untuk waktu countdown (nilai dalam menit)
-    // --- Global Variables Terpisah ---
-    // Untuk Countdown Adzan
-    let adzanDurations = { isya:10, shubuh:10, dzuhur:10, ashar:10, maghrib:10, jumat:10 };
-    let adzanCountdownDurations = Object.assign({}, adzanDurations);
 
-    // Untuk Countdown Iqamah
-    let iqamahDurations = { isya:25, shubuh:25, dzuhur:25, ashar:25, maghrib:3, jumat:25 };
-    let iqamahCountdownDurations = Object.assign({}, iqamahDurations);
-    // Tambahkan variabel global untuk overlay black
-    let overlayBlackDurations = { isya: 60, shubuh: 15, dzuhur: 15, ashar: 15, maghrib: 15, jumat: 60 };
-    var blackOverlayInterval;
+    let adzanCountdownDurations = {};
+    let iqamahCountdownDurations = {};
+    let overlayBlackDurations = {};
 
 
-    if (localStorage.getItem('adzanCountdownDurations')) {
-        adzanDurations = JSON.parse(localStorage.getItem('adzanCountdownDurations'));
-        adzanCountdownDurations = Object.assign({}, adzanDurations);
+////////////////AWAL FUNGSI IQAMAH SPREADSHEET/////////////////////////////////////////
+        // Fungsi untuk mengambil data dari Google Spreadsheet
+        function fetchIqamahCountdownData() {
+        const appsScriptUrl = "https://script.google.com/macros/s/AKfycbwTQkFerJ4CdIY7yNs2Z4MuGDUPUBfvNrfAovKu1hqNkWn-TrMvo3DIyv9PVtPxmaFJyA/exec?type=iqamah";
+
+        fetch(appsScriptUrl)
+          .then(response => response.json())
+          .then(data => {
+              if (!data || Object.keys(data).length === 0) {
+                  console.error("Error: Data Iqamah dari Spreadsheet kosong atau tidak terbaca.");
+                  return;
+              }
+
+              // Pastikan bahwa data yang diterima sesuai dengan yang diharapkan
+             console.log("Durasi Iqamah berhasil diperbarui:", data);
+
+              // ✅ Perbarui nilai form agar sesuai dengan Spreadsheet
+              document.getElementById('isyaIqamahCountdown').value = data.Isya || 25;
+              document.getElementById('shubuhIqamahCountdown').value = data.Shubuh || 25;
+              document.getElementById('dzuhurIqamahCountdown').value = data.Dzuhur || 25;
+              document.getElementById('asharIqamahCountdown').value = data.Ashar || 25;
+              document.getElementById('maghribIqamahCountdown').value = data.Maghrib || 3;
+
+              // ✅ Simpan data ke variabel global untuk digunakan di countdown
+              iqamahCountdownDurations = {
+                  isya: parseInt(data.Isya) || 25,
+                  shubuh: parseInt(data.Shubuh) || 25,
+                  dzuhur: parseInt(data.Dzuhur) || 25,
+                  ashar: parseInt(data.Ashar) || 25,
+                  maghrib: parseInt(data.Maghrib) || 3
+              };
+              console.log("Data yang diterima untuk Countdown Iqamah:", iqamahCountdownDurations);
+          })
+          .catch(err => console.error("Error fetching Iqamah Countdown data:", err));
+        }
+
+        // Fungsi untuk mengupdate data ke Google Spreadsheet
+        function updateIqamahCountdownData(data) {
+            const appsScriptUrl = "https://script.google.com/macros/s/AKfycbwTQkFerJ4CdIY7yNs2Z4MuGDUPUBfvNrfAovKu1hqNkWn-TrMvo3DIyv9PVtPxmaFJyA/exec";
+
+            fetch(appsScriptUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                mode: 'no-cors',  // Ini penting agar Apps Script tidak memblokir request
+                credentials: 'omit', // Mencegah pengiriman cookie/session
+                body: JSON.stringify({...data, type: "iqamah"}),
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                console.log("Countdown Iqamah telah diperbarui:", responseData);
+
+                // ✅ Perbarui variabel global agar popup countdown menggunakan nilai terbaru
+                iqamahCountdownDurations = { ...data };
+                console.log("Durasi Iqamah setelah update:", iqamahCountdownDurations);
+            })
+            .catch(err => console.error("Error updating Iqamah Countdown data:", err));
+        }
+
+
+        // Event Listener untuk Form Countdown Iqamah
+        document.getElementById('iqamahCountdownForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const isyaIqamahCountdown = parseInt(document.getElementById('isyaIqamahCountdown').value) || 25;
+        const shubuhIqamahCountdown = parseInt(document.getElementById('shubuhIqamahCountdown').value) || 25;
+        const dzuhurIqamahCountdown = parseInt(document.getElementById('dzuhurIqamahCountdown').value) || 25;
+        const asharIqamahCountdown = parseInt(document.getElementById('asharIqamahCountdown').value) || 25;
+        const maghribIqamahCountdown = parseInt(document.getElementById('maghribIqamahCountdown').value) || 3;
+        
+        const data = {
+          type: "iqamah",
+            Isya: isyaIqamahCountdown,
+            Shubuh: shubuhIqamahCountdown,
+            Dzuhur: dzuhurIqamahCountdown,
+            Ashar: asharIqamahCountdown,
+            Maghrib: maghribIqamahCountdown,
+        };
+
+        // Kirim data ke Google Spreadsheet
+        updateIqamahCountdownData(data);
+        fetchIqamahCountdownData(); // ✅ Ambil ulang data agar jika pengguna refresh, countdown tetap benar        
+        // Tutup offcanvas dan tampilkan menu utama
+        const offcanvasIqamahEl = document.getElementById('offcanvasCountdownIqamah');
+        const bsOffcanvasIqamah = bootstrap.Offcanvas.getInstance(offcanvasIqamahEl);
+        if (bsOffcanvasIqamah) {
+            bsOffcanvasIqamah.hide();
+        }
+        bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('mainOffcanvasMenu')).show();
+        });
+
+        // Ambil data saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', fetchIqamahCountdownData);
+////////////////AWAL FUNGSI IQAMAH SPREADSHEET/////////////////////////////////////////
+
+
+
+////////////////AWAL FUNGSI COUNTDOWN ADZAN SPREADSHEET/////////////////////////////////////////
+        // Fungsi untuk mengambil data dari Google Spreadsheet
+        function fetchAdzanCountdownData() {
+        const appsScriptUrl = "https://script.google.com/macros/s/AKfycbwTQkFerJ4CdIY7yNs2Z4MuGDUPUBfvNrfAovKu1hqNkWn-TrMvo3DIyv9PVtPxmaFJyA/exec?type=adzan";
+
+        fetch(appsScriptUrl)
+            .then(response => response.json())
+            .then(data => {
+                      if (!data || Object.keys(data).length === 0) {
+                        console.error("Error: Data Adzan dari Spreadsheet kosong atau tidak terbaca.");
+                        return;
+                    }
+
+              // Pastikan bahwa data yang diterima sesuai dengan yang diharapkan
+             console.log("Data yang diterima untuk Countdown Adzan:", data);
+
+              // ✅ Perbarui nilai form agar sesuai dengan Spreadsheet
+              document.getElementById('isyaAdzanCountdown').value = data.Isya || 10;
+              document.getElementById('shubuhAdzanCountdown').value = data.Shubuh || 10;
+              document.getElementById('dzuhurAdzanCountdown').value = data.Dzuhur || 10;
+              document.getElementById('asharAdzanCountdown').value = data.Ashar || 10;
+              document.getElementById('maghribAdzanCountdown').value = data.Maghrib || 10;
+
+                    adzanCountdownDurations = {
+                        isya: parseInt(data.Isya) || 10,
+                        shubuh: parseInt(data.Shubuh) || 10,
+                        dzuhur: parseInt(data.Dzuhur) || 10,
+                        ashar: parseInt(data.Ashar) || 10,
+                        maghrib: parseInt(data.Maghrib) || 10,
+                        jumat: parseInt(data.Jumat) || 10
+                    };
+                    console.log("Durasi Adzan berhasil diambil:", adzanCountdownDurations);
+                })
+                .catch(err => console.error("Error fetching Adzan Countdown data:", err));
+        }
+
+        // Fungsi untuk mengupdate data ke Google Spreadsheet
+        function updateAdzanCountdownData(data) {
+            const appsScriptUrl = "https://script.google.com/macros/s/AKfycbwTQkFerJ4CdIY7yNs2Z4MuGDUPUBfvNrfAovKu1hqNkWn-TrMvo3DIyv9PVtPxmaFJyA/exec?";
+
+            fetch(appsScriptUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                mode: 'no-cors',  // Ini penting agar Apps Script tidak memblokir request
+                credentials: 'omit', // Mencegah pengiriman cookie/session
+                body: JSON.stringify({...data, type: "adzan"}),
+            })
+                .then(response => response.json())
+                .then(responseData => {
+                    console.log("Countdown Adzan telah diperbarui:", responseData);
+
+                    // ✅ Sinkronkan variabel lokal dengan form
+                    adzanCountdownDurations = { ...data };
+                    console.log("Durasi Adzan setelah update:", adzanCountdownDurations);
+                })
+                .catch(err => console.error("Error updating Adzan Countdown data:", err));
+            }
+
+
+        // Event Listener untuk Form Countdown Adzan
+        document.getElementById('AdzanCountdownForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const isyaAdzanCountdown = parseInt(document.getElementById('isyaAdzanCountdown').value) || 25;
+        const shubuhAdzanCountdown = parseInt(document.getElementById('shubuhAdzanCountdown').value) || 25;
+        const dzuhurAdzanCountdown = parseInt(document.getElementById('dzuhurAdzanCountdown').value) || 25;
+        const asharAdzanCountdown = parseInt(document.getElementById('asharAdzanCountdown').value) || 25;
+        const maghribAdzanCountdown = parseInt(document.getElementById('maghribAdzanCountdown').value) || 3;
+        const jumatAdzanCountdown = parseInt(document.getElementById('jumatAdzanCountdown').value) || 3;
+
+        
+        const data = {
+          type: "adzan",
+            Isya: isyaAdzanCountdown,
+            Shubuh: shubuhAdzanCountdown,
+            Dzuhur: dzuhurAdzanCountdown,
+            Ashar: asharAdzanCountdown,
+            Maghrib: maghribAdzanCountdown,
+            Jumat: jumatAdzanCountdown,
+        };
+
+        // Kirim data ke Google Spreadsheet
+        updateAdzanCountdownData(data);
+        fetchAdzanCountdownData(); // ✅ Ambil ulang data agar jika pengguna refresh, countdown tetap benar        
+
+        
+        // Tutup offcanvas dan tampilkan menu utama
+        const offcanvasAdzanEl = document.getElementById('offcanvasCountdownAdzan');
+        const bsOffcanvasAdzan = bootstrap.Offcanvas.getInstance(offcanvasAdzanEl);
+        if (bsOffcanvasAdzan) {
+          bsOffcanvasAdzan.hide();
+        }
+        bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('mainOffcanvasMenu')).show();
+        });
+
+////////////////AKHIR FUNGSI COUNTDOWN ADZAN SPREADSHEET/////////////////////////////////////////
+
+
+
+
+////////////////AWAL FUNGSI COUNTDOWN BLACK OVERLAY SPREADSHEET/////////////////////////////////////////
+// Fungsi untuk mengambil data dari Google Spreadsheet (untuk Countdown Black Overlay)
+function fetchBlackOverlayData() {
+  const appsScriptUrl = "https://script.google.com/macros/s/AKfycbwTQkFerJ4CdIY7yNs2Z4MuGDUPUBfvNrfAovKu1hqNkWn-TrMvo3DIyv9PVtPxmaFJyA/exec?type=blackoverlay";
+
+  fetch(appsScriptUrl)
+    .then(response => response.json())
+    .then(data => {
+        if (!data || Object.keys(data).length === 0) {
+            console.error("Error: Data Black Overlay dari Spreadsheet kosong atau tidak terbaca.");
+            return;
+        }              
+        
+        // Pastikan bahwa data yang diterima sesuai dengan yang diharapkan
+        console.log("Data yang diterima untuk Durasi Overlay Black:", data);
+
+        // Perbarui nilai form agar sesuai dengan Spreadsheet
+        document.getElementById('isyaOverlay').value = data.Isya || 60;
+        document.getElementById('shubuhOverlay').value = data.Shubuh || 15;
+        document.getElementById('dzuhurOverlay').value = data.Dzuhur || 15;
+        document.getElementById('asharOverlay').value = data.Ashar || 15;
+        document.getElementById('maghribOverlay').value = data.Maghrib || 15;
+        document.getElementById('jumatOverlay').value = data.Jumat || 60;
+
+        // Simpan data ke variabel global untuk digunakan di countdown
+        overlayBlackDurations = {
+            isya: parseInt(data.Isya) || 60,
+            shubuh: parseInt(data.Shubuh) || 15,
+            dzuhur: parseInt(data.Dzuhur) || 15,
+            ashar: parseInt(data.Ashar) || 15,
+            maghrib: parseInt(data.Maghrib) || 15,
+            jumat: parseInt(data.Jumat) || 60
+        };
+
+        console.log("Durasi Black Overlay berhasil diperbarui:", overlayBlackDurations);
+    })
+    .catch(err => console.error("Error fetching Black Overlay data:", err));
+}
+
+// Fungsi untuk mengupdate data ke Google Spreadsheet
+function updateBlackOverlayData(data) {
+    const appsScriptUrl = "https://script.google.com/macros/s/AKfycbwTQkFerJ4CdIY7yNs2Z4MuGDUPUBfvNrfAovKu1hqNkWn-TrMvo3DIyv9PVtPxmaFJyA/exec";
+
+    fetch(appsScriptUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        mode: 'no-cors',  // Ini penting agar Apps Script tidak memblokir request
+        credentials: 'omit', // Mencegah pengiriman cookie/session
+        body: JSON.stringify({...data, type: "blackoverlay"}),
+    })
+    .then(response => response.json())
+    .then(responseData => {
+        console.log("Durasi Black Overlay telah diperbarui:", responseData);
+
+        // Perbarui variabel global agar popup countdown menggunakan nilai terbaru
+        overlayBlackDurations = { ...data };
+        console.log("Durasi Black Overlay setelah update:", overlayBlackDurations);
+    })
+    .catch(err => console.error("Error updating Black Overlay data:", err));
+}
+
+// Event Listener untuk Form Countdown Black Overlay
+document.getElementById('blackOverlayForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const isyaOverlay = parseInt(document.getElementById('isyaOverlay').value) || 60;
+    const shubuhOverlay = parseInt(document.getElementById('shubuhOverlay').value) || 15;
+    const dzuhurOverlay = parseInt(document.getElementById('dzuhurOverlay').value) || 15;
+    const asharOverlay = parseInt(document.getElementById('asharOverlay').value) || 15;
+    const maghribOverlay = parseInt(document.getElementById('maghribOverlay').value) || 15;
+    const jumatOverlay = parseInt(document.getElementById('jumatOverlay').value) || 60;
+    
+    const data = {
+        type: "blackoverlay",
+        Isya: isyaOverlay,
+        Shubuh: shubuhOverlay,
+        Dzuhur: dzuhurOverlay,
+        Ashar: asharOverlay,
+        Maghrib: maghribOverlay,
+        Jumat: jumatOverlay
+    };
+
+    // Kirim data ke Google Spreadsheet
+    updateBlackOverlayData(data);
+    fetchBlackOverlayData(); // Ambil ulang data agar jika pengguna refresh, countdown tetap benar
+    
+    // Tutup offcanvas dan tampilkan menu utama
+    const offcanvasBlackOverlayEl = document.getElementById('offcanvasBlackOverlay');
+    const bsOffcanvasBlackOverlay = bootstrap.Offcanvas.getInstance(offcanvasBlackOverlayEl);
+    if (bsOffcanvasBlackOverlay) {
+        bsOffcanvasBlackOverlay.hide();
     }
-    if (localStorage.getItem('iqamahCountdownDurations')) {
-        iqamahDurations = JSON.parse(localStorage.getItem('iqamahCountdownDurations'));
-        iqamahCountdownDurations = Object.assign({}, iqamahDurations);
-    }
-    if (localStorage.getItem('overlayBlackDurations')) {
-        overlayBlackDurations = JSON.parse(localStorage.getItem('overlayBlackDurations'));
-    }
+    bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('mainOffcanvasMenu')).show();
+});
+
+// Ambil data saat halaman dimuat
+document.addEventListener('DOMContentLoaded', fetchBlackOverlayData);
+
+////////////////AKHIR FUNGSI COUNTDOWN BLACK OVERLAY SPREADSHEET/////////////////////////////////////////
+
+
 
 
     // Global flag untuk mencegah popup adzan dipicu berkali-kali
@@ -1102,7 +1397,11 @@ function timeStringToDate(timeStr) {
   }
 }
 
-// --- COUNTDOWN ADZAN ---
+
+
+
+
+/////////// AWAL FUNGSI POPUP DAN MP3 COUNTDOWN ADZAN /////////// 
 // --- Popup dan Countdown untuk ADZAN ---
 // Fungsi untuk menampilkan popup
 function showPopupAdzan(prayer) {
@@ -1111,234 +1410,155 @@ function showPopupAdzan(prayer) {
     prayer = "jumat";
   }
   if (window.popupAdzanActive) return;
-  window.popupAdzanActive = true;
+    window.popupAdzanActive = true;
 
-  const popup = document.getElementById("popupAdzan");
-  const popupText = document.getElementById("popupAdzanText");
-  const popupCountdown = document.getElementById("popupCountdown");
-  const popupOverlay = document.getElementById("popupOverlay");
+    const popup = document.getElementById("popupAdzan");
+    const popupText = document.getElementById("popupAdzanText");
+    const popupCountdown = document.getElementById("popupCountdown");
+    const popupOverlay = document.getElementById("popupOverlay");
 
-  if (prayer === "imsak" || prayer === "syuruq") {
-    popupCountdown.style.display = "none";
-    popup.style.display = "block";
-    popupOverlay.style.display = "block";
-    document.getElementById("audioRooster").play();
-    popupText.innerText = "Waktu " + prayer.charAt(0).toUpperCase() + prayer.slice(1) + " telah tiba";
-    setTimeout(() => {
-      popup.style.display = "none";
-      popupOverlay.style.display = "none";
-      window.popupAdzanActive = false;
-    }, 60000);
-  } else {
-    let countdown = adzanCountdownDurations[prayer.toLowerCase()] * 60;
+    let countdown = adzanCountdownDurations[prayer.toLowerCase()];
+
+    // ✅ Ambil nilai terbaru dari form jika undefined
+    if (countdown === undefined || isNaN(countdown)) {
+        countdown = parseInt(document.getElementById(`${prayer.toLowerCase()}AdzanCountdown`).value);
+        if (isNaN(countdown)) countdown = 10; // Default backup
+    }
+
+    countdown *= 60; // Konversi ke detik
     popup.classList.remove("p-3");
     popup.classList.add("p-5", "fs-2");
     popup.style.display = "block";
     popupOverlay.style.display = "block";
 
-    // Jika Maghrib, putar radio dan jangan putar shalawat
+    // ✅ Pastikan hanya satu audio yang diputar
+    document.getElementById("audioRadio").pause();
+    document.getElementById("audioRadio").currentTime = 0;
+    document.getElementById("audioShalawat").pause();
+    document.getElementById("audioShalawat").currentTime = 0;
+    document.getElementById("audioAdzan").pause();
+    document.getElementById("audioAdzan").currentTime = 0;
+
+    // ✅ Jika Maghrib, putar radio; selain itu, putar shalawat
     if (prayer.toLowerCase() === "maghrib") {
-      document.getElementById("audioRadio").play();
-    } else if (prayer !== "jumat") {
-      // Untuk selain Maghrib dan Jumat, putar audio shalawat
-      document.getElementById("audioShalawat").play();
+        document.getElementById("audioRadio").play();
+    } else if (prayer.toLowerCase() !== "jumat") {
+        document.getElementById("audioShalawat").play();
     }
 
     window.adzanCountdownInterval = setInterval(() => {
-      countdown--;
-      const minutes = Math.floor(countdown / 60);
-      const seconds = countdown % 60;
-      popupCountdown.innerText = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+        countdown--;
+        const minutes = Math.floor(countdown / 60);
+        const seconds = countdown % 60;
+        popupCountdown.innerText = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
 
-      // Jika hari Jumat, paksa teks menjadi "Waktu Adzan Jumat segera tiba"
-      if (prayer === "jumat") {
-        popupText.innerText = "Waktu Adzan Jumat segera tiba";
-      } else {
-        popupText.innerText = "Waktu Adzan " + prayer.charAt(0).toUpperCase() + prayer.slice(1) + " segera tiba";
-      }
-
-      if (countdown <= 0) {
-        clearInterval(window.adzanCountdownInterval);
-        window.adzanCountdownInterval = null;
-
-        // Hentikan radio jika sedang diputar (khusus Maghrib)
-        if (prayer.toLowerCase() === "maghrib") {
-          document.getElementById("audioRadio").pause();
-          document.getElementById("audioRadio").currentTime = 0;
-        }        
-
-        if (prayer !== "jumat") {
-          popupText.innerText = "Waktunya Adzan " + prayer.charAt(0).toUpperCase() + prayer.slice(1) + " untuk wilayah Tapa dan sekitarnya";
-          document.getElementById("audioShalawat").pause();
-          document.getElementById("audioShalawat").currentTime = 0;
-          if (document.getElementById("audioAdzan").paused) {
-            document.getElementById("audioAdzan").play();
-          }
-          // Lanjut ke countdown iqamah
-          setTimeout(() => {
-            popup.style.display = "none";
-            popupOverlay.style.display = "none";
-            window.popupAdzanActive = false;
-            startIqamahCountdown(prayer);
-          }, 10000);
+        // ✅ Jika hari Jumat, paksa teks menjadi "Waktu Adzan Jumat segera tiba"
+        if (prayer.toLowerCase() === "jumat") {
+            popupText.innerText = "Waktu Adzan Jumat segera tiba";
         } else {
-          // Khusus untuk Jumat: langsung tampilkan overlay hitam tanpa iqamah
-          let overlayDuration = overlayBlackDurations["jumat"] * 60;
-          showBlackOverlay(overlayDuration);
-          setTimeout(() => {
-            popup.style.display = "none";
-            popupOverlay.style.display = "none";
-            window.popupAdzanActive = false;
-          }, 10000);
+            popupText.innerText = "Waktu Adzan " + prayer.charAt(0).toUpperCase() + prayer.slice(1) + " segera tiba";
         }
-      }
-    }, 1000);
-  }
-}
 
+        if (countdown <= 0) {
+            clearInterval(window.adzanCountdownInterval);
+            window.adzanCountdownInterval = null;
+
+            // ✅ Hentikan radio jika Maghrib
+            if (prayer.toLowerCase() === "maghrib") {
+                document.getElementById("audioRadio").pause();
+                document.getElementById("audioRadio").currentTime = 0;
+            }        
+
+            if (prayer.toLowerCase() !== "jumat") {
+                popupText.innerText = "Waktunya Adzan " + prayer.charAt(0).toUpperCase() + prayer.slice(1) + " untuk wilayah Tapa dan sekitarnya";
+
+                // ✅ Hentikan shalawat dan putar Adzan
+                document.getElementById("audioShalawat").pause();
+                document.getElementById("audioShalawat").currentTime = 0;
+                if (document.getElementById("audioAdzan").paused) {
+                    document.getElementById("audioAdzan").play();
+                }
+
+                // ✅ Lanjut ke countdown iqamah setelah 10 detik
+                setTimeout(() => {
+                    popup.style.display = "none";
+                    popupOverlay.style.display = "none";
+                    window.popupAdzanActive = false;
+                    startIqamahCountdown(prayer);
+                }, 10000);
+            } else {
+                // ✅ Khusus untuk Jumat: langsung tampilkan overlay hitam tanpa iqamah
+                let overlayDuration = overlayBlackDurations["jumat"] * 60;
+                showBlackOverlay(overlayDuration);
+                setTimeout(() => {
+                    popup.style.display = "none";
+                    popupOverlay.style.display = "none";
+                    window.popupAdzanActive = false;
+                }, 10000);
+            }
+        }
+    }, 1000);
+}
+/////////// AKHIR FUNGSI POPUP DAN MP3 COUNTDOWN ADZAN ///////////
      
       
-    // --- COUNTDOWN IQAMAH ---
-    // --- Countdown Iqamah ---
-    // Fungsi untuk memulai countdown iqamah
+/////////// AWAL FUNGSI POPUP DAN MP3 COUNTDOWN IQAMAH ///////////
+    //COUNTDOWN IQAMAH ---
     function startIqamahCountdown(prayer) {
-  const iqamahDiv = document.getElementById("iqamahCountdown");
-  const iqamahText = document.getElementById("iqamahText");
-  const iqamahTimer = document.getElementById("iqamahTimer");
-  const iqamahOverlay = document.getElementById("iqamahOverlay");
+    if (window.popupIqamahActive) return;
+    window.popupIqamahActive = true;
 
-  let duration = iqamahCountdownDurations[prayer.toLowerCase()] * 60;
+    const iqamahDiv = document.getElementById("iqamahCountdown");
+    const iqamahText = document.getElementById("iqamahText");
+    const iqamahTimer = document.getElementById("iqamahTimer");
+    const iqamahOverlay = document.getElementById("iqamahOverlay");
 
-  iqamahDiv.style.display = "block";
-  iqamahOverlay.style.display = "block";
-  iqamahText.innerText = "Waktu Iqamah " + prayer.charAt(0).toUpperCase() + prayer.slice(1);
+    let countdown = iqamahCountdownDurations[prayer.toLowerCase()];
 
-  // Hentikan radio jika sedang diputar (khusus Maghrib)
-  if (prayer.toLowerCase() === "maghrib") {
-    document.getElementById("audioRadio").pause();
-    document.getElementById("audioRadio").currentTime = 0;
-  }
-
-  window.iqamahCountdownInterval = setInterval(() => {
-    duration--;
-    const minutes = Math.floor(duration / 60);
-    const seconds = duration % 60;
-    iqamahTimer.innerText = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
-    
-    if(duration === 15) {
-      document.getElementById("audioBeep").play();
-      iqamahText.innerText = "Harap Silent/Nonaktifkan HP";
-      setTimeout(() => {
-        iqamahText.innerText = "Lurus dan Rapatkan Shaf";
-      }, 7000);
+    // ✅ Ambil nilai terbaru dari form jika undefined
+    if (countdown === undefined || isNaN(countdown)) {
+        countdown = parseInt(document.getElementById(`${prayer.toLowerCase()}IqamahCountdown`).value);
+        if (isNaN(countdown)) countdown = 25; // Default backup
     }
 
-    if(duration <= 0) {
-      clearInterval(window.iqamahCountdownInterval);
-      window.iqamahCountdownInterval = null;
-      iqamahDiv.style.display = "none";
-      iqamahOverlay.style.display = "none";
-      let lowerPrayer = prayer.toLowerCase();
-      let overlayDuration = overlayBlackDurations[lowerPrayer] ? overlayBlackDurations[lowerPrayer] * 60 : 0;
-      showBlackOverlay(overlayDuration);
-    }
-  }, 1000);
+    countdown *= 60; // Konversi ke detik
+    iqamahDiv.style.display = "block";
+    iqamahOverlay.style.display = "block";
+    iqamahText.innerText = `Iqamah ${prayer} dalam:`;
+
+    window.iqamahCountdownInterval = setInterval(() => {
+        const minutes = Math.floor(countdown / 60);
+        const seconds = countdown % 60;
+        iqamahTimer.innerText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        countdown--;
+
+        // ✅ Jika sisa waktu 15 detik, beri peringatan "Harap Silent HP"
+        if (countdown === 15) {
+            document.getElementById("audioBeep").play();
+            iqamahText.innerText = "Harap Silent/Nonaktifkan HP";
+            setTimeout(() => {
+                iqamahText.innerText = "Lurus dan Rapatkan Shaf";
+            }, 7000);
+        }
+
+        if (countdown <= 0) {
+            clearInterval(window.iqamahCountdownInterval);
+            iqamahDiv.style.display = "none";
+            iqamahOverlay.style.display = "none";
+
+            // ✅ Tampilkan overlay hitam untuk persiapan shalat (15 menit, kecuali Jumat)
+            let overlayDuration = (overlayBlackDurations[prayer.toLowerCase()] || (prayer.toLowerCase() === "jumat" ? 60 : 15)) * 60;
+            showBlackOverlay(overlayDuration);
+        }
+    }, 1000);
 }
 
-// --- Event Listener untuk Form Countdown ADZAN ---
-document.getElementById('countdownForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  const isyaCountdown   = parseInt(document.getElementById('isyaCountdown').value)   || 10;
-  const shubuhCountdown = parseInt(document.getElementById('shubuhCountdown').value) || 10;
-  const dzuhurCountdown = parseInt(document.getElementById('dzuhurCountdown').value) || 10;
-  const asharCountdown  = parseInt(document.getElementById('asharCountdown').value)  || 10;
-  const maghribCountdown= parseInt(document.getElementById('maghribCountdown').value)|| 10;
-  const jumatCountdown  = parseInt(document.getElementById('jumatCountdown').value)  || 10;
-  
-  // Update variabel global
-  adzanDurations = {
-    isya: isyaCountdown,
-    shubuh: shubuhCountdown,
-    dzuhur: dzuhurCountdown,
-    ashar: asharCountdown,
-    maghrib: maghribCountdown,
-    jumat: jumatCountdown
-  };
-  adzanCountdownDurations = Object.assign({}, adzanDurations);
-  
-  // Simpan nilai baru ke localStorage
-  localStorage.setItem('adzanCountdownDurations', JSON.stringify(adzanDurations));
-  
-  // Clear countdown yang sudah berjalan
-  if (window.adzanCountdownInterval) {
-    clearInterval(window.adzanCountdownInterval);
-    window.adzanCountdownInterval = null;
-  }
-  if (window.iqamahCountdownInterval) {
-    clearInterval(window.iqamahCountdownInterval);
-    window.iqamahCountdownInterval = null;
-  }
-  
-  // Tutup offcanvas dan tampilkan menu utama
-  const offcanvasCountdownEl = document.getElementById('offcanvasCountdownAdzan');
-  const bsOffcanvasCountdown = bootstrap.Offcanvas.getInstance(offcanvasCountdownEl);
-  if (bsOffcanvasCountdown) {
-    bsOffcanvasCountdown.hide();
-  }
-  bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('mainOffcanvasMenu')).show();
-  
-  console.log("Countdown Adzan telah diperbarui:", adzanDurations);
-});
-
-
-// --- Event Listener untuk Form Countdown IQAMAH ---
-document.getElementById('iqamahCountdownForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  const isyaIqamahCountdown    = parseInt(document.getElementById('isyaIqamahCountdown').value)    || 25;
-  const shubuhIqamahCountdown  = parseInt(document.getElementById('shubuhIqamahCountdown').value)  || 25;
-  const dzuhurIqamahCountdown  = parseInt(document.getElementById('dzuhurIqamahCountdown').value)  || 25;
-  const asharIqamahCountdown   = parseInt(document.getElementById('asharIqamahCountdown').value)   || 25;
-  const maghribIqamahCountdown = parseInt(document.getElementById('maghribIqamahCountdown').value) || 3;
-  
-  // Perbarui objek global khusus untuk countdown Iqamah
-  iqamahDurations = {
-    isya: isyaIqamahCountdown,
-    shubuh: shubuhIqamahCountdown,
-    dzuhur: dzuhurIqamahCountdown,
-    ashar: asharIqamahCountdown,
-    maghrib: maghribIqamahCountdown,
-  };
-  iqamahCountdownDurations = Object.assign({}, iqamahDurations);
-
-  // Simpan nilai baru ke localStorage
-  localStorage.setItem('iqamahCountdownDurations', JSON.stringify(adzanDurations));
-  
-  if (window.adzanCountdownInterval) {
-    clearInterval(window.adzanCountdownInterval);
-    window.adzanCountdownInterval = null;
-  }
-  if (window.iqamahCountdownInterval) {
-    clearInterval(window.iqamahCountdownInterval);
-    window.iqamahCountdownInterval = null;
-  }
-  
-  // Tutup offcanvas Countdown IQAMAH (id: offcanvasCountdownIqamah) dan tampilkan Main Offcanvas Menu
-  const offcanvasIqamahEl = document.getElementById('offcanvasCountdownIqamah');
-  const bsOffcanvasIqamah = bootstrap.Offcanvas.getInstance(offcanvasIqamahEl);
-  if (bsOffcanvasIqamah) {
-    bsOffcanvasIqamah.hide();
-  }
-  bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('mainOffcanvasMenu')).show();
-  
-  console.log("Countdown Iqamah telah diperbarui:", iqamahDurations);
-});
+/////////// AKHIR FUNGSI POPUP DAN MP3 COUNTDOWN IQAMAH ///////////
 
 
 
-    // --- Tampilkan overlay hitam dengan durasi tertentu ---
-    function showBlackOverlay(duration) {
+////////////////////////////////////////
+function showBlackOverlay(duration) {
         // Sembunyikan tabel adzan dan running text
         const adzanTable = document.querySelector('.adzan-table');
         const runningText = document.querySelector('.marquee');
@@ -1382,9 +1602,6 @@ document.getElementById('iqamahCountdownForm').addEventListener('submit', functi
             if (runningText) runningText.style.display = 'block';
     });
 
-
-
-
     // Misal, definisikan variabel global untuk offset trigger popup (dalam detik)
     let popupTriggerOffset = 600; // default 10 menit
 
@@ -1399,6 +1616,13 @@ document.getElementById('iqamahCountdownForm').addEventListener('submit', functi
         }
       });
     }, 1000);
+
+
+
+
+
+
+
 
     // ==================== FUNGSI BARU UNTUK FORM DATA MASJID ====================
     // Preview logo ketika file di-upload
@@ -1667,58 +1891,6 @@ function updateRunningTextDisplay(runningTexts) {
     marqueeEl.innerText = texts.join("      |      ");
   }
 }
-
-
-
-////////// FUNGSI LATAR HITAM //////////
-document.getElementById('blackOverlayForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  const isyaOverlay = parseInt(document.getElementById('isyaOverlay').value) || 60;
-  const shubuhOverlay = parseInt(document.getElementById('shubuhOverlay').value) || 15;
-  const dzuhurOverlay = parseInt(document.getElementById('dzuhurOverlay').value) || 15;
-  const asharOverlay = parseInt(document.getElementById('asharOverlay').value) || 15;
-  const maghribOverlay = parseInt(document.getElementById('maghribOverlay').value) || 15;
-  const jumatOverlay = parseInt(document.getElementById('jumatOverlay').value) || 60;
-  
-  overlayBlackDurations = {
-    isya: isyaOverlay,
-    shubuh: shubuhOverlay,
-    dzuhur: dzuhurOverlay,
-    ashar: asharOverlay,
-    maghrib: maghribOverlay,
-    jumat: jumatOverlay
-  };
-  
-  localStorage.setItem('overlayBlackDurations', JSON.stringify(overlayBlackDurations));
-  
-  // Tutup offcanvas dan kembali ke menu utama
-  const offcanvasBlackOverlayEl = document.getElementById('offcanvasBlackOverlay');
-  const bsOffcanvasBlackOverlay = bootstrap.Offcanvas.getInstance(offcanvasBlackOverlayEl);
-  if (bsOffcanvasBlackOverlay) {
-    bsOffcanvasBlackOverlay.hide();
-  }
-  bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('mainOffcanvasMenu')).show();
-  
-  console.log("Overlay Black Durations updated:", overlayBlackDurations);
-});
-
-// Saat offcanvas ditampilkan, isi nilai form dengan data yang tersimpan
-var offcanvasBlackOverlayEl = document.getElementById('offcanvasBlackOverlay');
-offcanvasBlackOverlayEl.addEventListener('show.bs.offcanvas', function(){
-  let storedOverlay = localStorage.getItem('overlayBlackDurations');
-  if (storedOverlay) {
-    overlayBlackDurations = JSON.parse(storedOverlay);
-  }
-  document.getElementById('isyaOverlay').value = overlayBlackDurations.isya;
-  document.getElementById('shubuhOverlay').value = overlayBlackDurations.shubuh;
-  document.getElementById('dzuhurOverlay').value = overlayBlackDurations.dzuhur;
-  document.getElementById('asharOverlay').value = overlayBlackDurations.ashar;
-  document.getElementById('maghribOverlay').value = overlayBlackDurations.maghrib;
-  document.getElementById('jumatOverlay').value = overlayBlackDurations.jumat;
-});
-
-
 
 
 ////////// FUNGSI MODE OTOMATIS / MANUAL //////////
