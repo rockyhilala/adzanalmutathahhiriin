@@ -7,7 +7,7 @@
   <link rel="icon" href="data:,">
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!--CDN UNTUK LAYAR TETAP AKTIF-->
+  <!--CDN UNTUK LAYAR TETAP AKTIF-->
   <script src="https://cdn.jsdelivr.net/npm/nosleep.js@0.12.0/dist/NoSleep.min.js"></script>
   <!-- Sertakan prayTimes.js secara lokal. Pastikan file "prayTimes.js" ada di lokasi ini -->
   <script src="prayTimes.js"></script>
@@ -255,6 +255,49 @@
     transform: translateY(-100%); /* Geser ke atas */
     }
 
+    /* Video Overlay */
+#videoOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 99999;
+    display: none;
+}
+
+#videoContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+}
+
+#videoFrame {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+#closeVideo {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100000;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
   </style>
 </head>
 <body>
@@ -446,6 +489,7 @@ justify-content: center;
       <button class="btn btn-success" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCountdownAdzan">Durasi Tunggu Adzan</button>
       <button class="btn btn-success" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCountdownIqamah">Durasi Tunggu Iqamah</button>
       <button class="btn btn-success" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBlackOverlay">Durasi Latar Hitam</button>
+      <button class="btn btn-danger" id="playEmergencyVideo">▶️ Putar Video Darurat</button>
     </div>
   </div>
 
@@ -695,6 +739,16 @@ justify-content: center;
   </marquee>
 </div>
 
+  <!-- TOMBOL FRAME VIDEO LIVE MEKKAH -->
+  <div id="videoOverlay">
+    <div id="videoContainer">
+        <button id="closeVideo">&times;</button>
+        <iframe id="videoFrame" src="" 
+            allow="autoplay; encrypted-media" 
+            allowfullscreen></iframe>
+    </div>
+  </div>
+
   <!-- Audio -->
   <audio id="audioShalawat" src="shalawat.m4a" loop></audio>
   <audio id="audioAdzan" src="adzan.mp3"></audio>
@@ -709,22 +763,53 @@ justify-content: center;
   <!-- Script JavaScript -->
   <script>
 
-// Fungsi untuk memaksa fullscreen
-//function enterFullscreen() {
-  //  if (!document.fullscreenElement) {
-    //    document.documentElement.requestFullscreen()
-      //      .catch(err => console.log("Error entering fullscreen:", err));
-    //}
-//}
 
-// Panggil saat load dan setiap kali kembali ke halaman
-//document.addEventListener('DOMContentLoaded', enterFullscreen);
-//document.addEventListener('visibilitychange', enterFullscreen);
+//////////FRAME UNTUK VIDEO LIVE MEKKAH////////////
+document.getElementById('playEmergencyVideo').addEventListener('click', function() {
+    // Tutup semua menu offcanvas
+    const offcanvasInstances = document.querySelectorAll('.offcanvas');
+    offcanvasInstances.forEach(offcanvas => {
+        bootstrap.Offcanvas.getInstance(offcanvas)?.hide();
+    });
+    
+    // Matikan carousel dan tabel
+    document.querySelector('.media-container').style.display = 'none';
+    document.querySelector('.adzan-table').style.display = 'none';
+    
+    // Tampilkan video overlay
+    const videoOverlay = document.getElementById('videoOverlay');
+    const videoFrame = document.getElementById('videoFrame');
+    videoOverlay.style.display = 'block';
+    
+    // Set video ID (ganti dengan ID yang diinginkan)
+    const videoId = 'tko4c06NJeA';
+    videoFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&rel=0`;
+});
+
+document.getElementById('closeVideo').addEventListener('click', function() {
+    // Sembunyikan video overlay
+    document.getElementById('videoOverlay').style.display = 'none';
+    
+    // Tampilkan kembali carousel dan tabel
+    document.querySelector('.media-container').style.display = 'flex';
+    document.querySelector('.adzan-table').style.display = 'block';
+    
+    // Hentikan video
+    const videoFrame = document.getElementById('videoFrame');
+    videoFrame.src = '';
+});
+
+// Blokir semua interaksi kecuali tombol close
+document.getElementById('videoOverlay').addEventListener('click', function(e) {
+    if(e.target === this) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+});
 
 
     // Inisialisasi jadwal sebagai objek kosong; nanti akan di-update otomatis
     let adzanSchedule = {};
-
     let adzanCountdownDurations = {};
     let iqamahCountdownDurations = {};
     let overlayBlackDurations = {};
@@ -1275,7 +1360,7 @@ document.addEventListener('DOMContentLoaded', fetchBlackOverlayData);
 
     // Ambil data saat halaman dimuat dan perbarui tiap menit
     fetchData(true);
-    setInterval(() => fetchData(false), 60000);
+    //setInterval(() => fetchData(false), 60000);
 
     // --- Fungsi Jadwal Adzan Otomatis menggunakan prayTimes.js ---
     function calculatePrayerTimesAutomatically(latitude, longitude) {
@@ -1933,6 +2018,7 @@ function resetToAuto() {
 }
 
 
+
 /////////////// AWAL FUNGSI WAKE LOCK //////////////////
 let noSleep;
 let wakeLock;
@@ -2051,6 +2137,7 @@ document.body.appendChild(canvas);
   requestAnimationFrame(animate);
 })();
 /////////////// AKHIR FUNGSI WAKE LOCK //////////////////
+
 
 
 
