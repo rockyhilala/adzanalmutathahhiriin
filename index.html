@@ -918,13 +918,17 @@ justify-content: center;
 
         
         // Tutup offcanvas dan tampilkan menu utama
-        const offcanvasAdzanEl = document.getElementById('offcanvasCountdownAdzan');
-        const bsOffcanvasAdzan = bootstrap.Offcanvas.getInstance(offcanvasAdzanEl);
-        if (bsOffcanvasAdzan) {
-          bsOffcanvasAdzan.hide();
+        const offcanvasCountdownAdzan  = document.getElementById('offcanvasCountdownAdzan');
+        const bsoffcanvasCountdownAdzan = bootstrap.Offcanvas.getInstance(offcanvasCountdownAdzan);
+        if (bsoffcanvasCountdownAdzan) {
+          bsoffcanvasCountdownAdzan.hide();
         }
         bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('mainOffcanvasMenu')).show();
         });
+
+        
+// Ambil data saat halaman dimuat
+document.addEventListener('DOMContentLoaded', fetchAdzanCountdownData);
 
 ////////////////AKHIR FUNGSI COUNTDOWN ADZAN SPREADSHEET/////////////////////////////////////////
 
