@@ -875,7 +875,7 @@ document.getElementById('masjidDataForm').addEventListener('submit', function(e)
     
     const namaMasjid = document.getElementById('namaMasjidInput').value.trim();
     const alamatMasjid = document.getElementById('alamatMasjidInput').value.trim();
-    const logoMasjid = document.getElementById('masjidLogo').src = "logo.png";
+    const logoMasjid = document.getElementById('masjidLogo').src || "logo.png";
     
     const data = {
         type: "datamasjid",
@@ -885,9 +885,7 @@ document.getElementById('masjidDataForm').addEventListener('submit', function(e)
     };
 
     // Kirim data ke Google Spreadsheet
-    updateMasjidData(data).then(() => {
-      fetchMasjidData(); // Ambil data terbaru dari spreadsheet
-    });   
+    updateMasjidData(data);
     
     // Tutup offcanvas setelah update berhasil
     const offcanvasMasjidEl = document.getElementById('offcanvasDataMasjid');
