@@ -503,7 +503,7 @@ justify-content: center;
     </button>
     <h5 id="offcanvasAdzanLabel" class="ms-auto">Setting Waktu Adzan Manual</h5>
   </div>
-  <div class="offcanvas-body">
+  <div class="offcanvas-body" tabindex="-1">
     <form id="manualPrayerForm" >
       <!-- Form Input untuk waktu adzan -->
       <div class="mb-3">
@@ -534,7 +534,7 @@ justify-content: center;
         <label for="isyaInput" class="form-label">Isya</label>
         <input type="time" class="form-control" id="isyaInput" required>
       </div>
-      <button type="submit" class="btn btn-primary">Update</button>
+      <button type="submit" class="btn btn-primary" tabindex="0">Update</button>
     </form>
   </div>
       <!-- Di dalam offcanvasAdzan -->
@@ -686,6 +686,7 @@ justify-content: center;
       </form>
     </div>
 </div>
+
 
 <!-- Contoh marquee running text -->
 <div class="marquee">
