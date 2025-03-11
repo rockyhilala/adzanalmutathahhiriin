@@ -575,7 +575,7 @@ justify-content: center;
       </button>
       <h5 id="offcanvasCountdownAdzanLabel" class="ms-auto">Setting Countdown</h5>
     </div>
-    <div class="offcanvas-body">
+    <div class="offcanvas-body" tabindex="-1">
       <form id="AdzanCountdownForm">
         <!-- Form Input untuk waktu countdown Adzan -->
         <div class="mb-3">
@@ -602,7 +602,7 @@ justify-content: center;
           <label for="jumatAdzanCountdown" class="form-label">Jumat</label>
           <input type="number" class="form-control" id="jumatAdzanCountdown" >
         </div>
-        <button type="submit" class="btn btn-primary">Update</button>
+        <button type="submit" class="btn btn-primary" tabindex="0">Update</button>
       </form>
     </div>
   </div>
@@ -615,7 +615,7 @@ justify-content: center;
       </button>
       <h5 id="offcanvasCountdownIqamahLabel" class="ms-auto">Setting Countdown Iqamah</h5>
     </div>
-    <div class="offcanvas-body">
+    <div class="offcanvas-body" tabindex="-1">
       <form id="iqamahCountdownForm">
         <!-- Form Input untuk waktu countdown Iqamah -->
         <div class="mb-3">
@@ -638,7 +638,7 @@ justify-content: center;
           <label for="maghribIqamahCountdown" class="form-label">Maghrib</label>
           <input type="number" class="form-control" id="maghribIqamahCountdown">
         </div>
-        <button type="submit" class="btn btn-primary">Update</button>
+        <button type="submit" class="btn btn-primary" tabindex="0">Update</button>
       </form>
     </div>
   </div>
@@ -653,7 +653,7 @@ justify-content: center;
       </button>
       <h5 id="offcanvasBlackOverlayLabel" class="ms-auto">Setting Durasi Overlay Black</h5>
     </div>
-    <div class="offcanvas-body">
+    <div class="offcanvas-body" tabindex="-1">
       <form id="blackOverlayForm">
         <!-- Field input -->
         <div class="mb-3">
@@ -680,14 +680,10 @@ justify-content: center;
           <label for="jumatOverlay" class="form-label">Jumat (menit)</label>
           <input type="number" class="form-control" id="jumatOverlay">
         </div>
-        <button type="submit" class="btn btn-primary">Update</button>
+        <button type="submit" class="btn btn-primary" tabindex="0">Update</button>
       </form>
     </div>
 </div>
-
-
-  
-
 
 <!-- Contoh marquee running text -->
 <div class="marquee">
