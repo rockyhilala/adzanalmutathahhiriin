@@ -7,6 +7,8 @@
   <link rel="icon" href="data:,">
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--CDN UNTUK LAYAR TETAP AKTIF-->
+  <script src="https://cdn.jsdelivr.net/npm/nosleep.js@0.12.0/dist/NoSleep.min.js"></script>
   <!-- Sertakan prayTimes.js secara lokal. Pastikan file "prayTimes.js" ada di lokasi ini -->
   <script src="prayTimes.js"></script>
   <style>
@@ -1930,52 +1932,124 @@ function resetToAuto() {
 }
 
 
-// Fungsi untuk mengelola Wake Lock
-let wakeLock = null;
+/////////////// AWAL FUNGSI WAKE LOCK //////////////////
+let noSleep;
+let wakeLock;
+let wakeLockInterval;
 
-// Fungsi untuk meminta Wake Lock
-async function requestWakeLock() {
-  // Periksa apakah browser mendukung Wake Lock API
+function enableAggressiveWakeLock() {
+  // Method 1: NoSleep.js dengan video transparan
+  noSleep = new NoSleep();
+  noSleep.enable().catch(err => {
+    console.error('NoSleep.js error:', err);
+  });
+
+  // Method 2: Wake Lock API Modern
   if ('wakeLock' in navigator) {
-    try {
-      // Minta Wake Lock untuk mencegah layar mati
-      wakeLock = await navigator.wakeLock.request('screen');
-      console.log("Wake Lock aktif");
+    navigator.wakeLock.request('screen').then(wl => {
+      wakeLock = wl;
+      console.log('Wake Lock API aktif!');
+    });
+  }
 
-      // Ketika Wake Lock dilepas, tampilkan pesan di console
-      wakeLock.addEventListener('release', () => {
-        console.log("Wake Lock dilepas");
-      });
-    } catch (err) {
-      console.error("Gagal mendapatkan Wake Lock: ", err);
-    }
-  } else {
-    // Fallback untuk browser yang tidak mendukung Wake Lock
-    console.warn("Browser tidak mendukung Wake Lock API. Menggunakan fallback.");
+  // Method 3: Simulasi interaksi pengguna setiap 10 detik
+  wakeLockInterval = setInterval(() => {
+    // Simulasi touch event
+    const touchEvent = new TouchEvent('touchend', {
+      touches: [new Touch({ identifier: 'keepalive', target: document.body })],
+      bubbles: true,
+      cancelable: false
+    });
+    document.dispatchEvent(touchEvent);
+    
+    // Simulasi mouse movement
+    window.scrollBy(0, 1);
+    setTimeout(() => window.scrollBy(0, -1), 50);
+  }, 10000);
 
-    // Lakukan perubahan kecil pada properti CSS secara periodik untuk mencegah screensaver
-    setInterval(() => {
-      document.body.style.transform = 'rotate(0.01deg)'; // Rotasi kecil
-      setTimeout(() => {
-        document.body.style.transform = 'rotate(0deg)'; // Reset rotasi
-      }, 50); // Durasi perubahan rotasi 50ms
-    }, 30000); // Ulangi setiap 30 detik
+  // Method 4: Video heartbeat tersembunyi
+  const stealthVideo = document.createElement('video');
+  stealthVideo.setAttribute('muted', '');
+  stealthVideo.setAttribute('playsinline', '');
+  stealthVideo.style.cssText = 'position:fixed;top:-10px;left:-10px;opacity:0;pointer-events:none;width:1px;height:1px;';
+  
+  const source = document.createElement('source');
+  source.src = 'data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAAAVxtZGF0AAAAMg8FBv9GgZ3B+enp4XBhYWFiYWJhYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiYmJiakaaZk=';
+  source.type = 'video/mp4';
+  
+  stealthVideo.appendChild(source);
+  document.body.appendChild(stealthVideo);
+  
+  stealthVideo.play().catch(err => {
+    console.error('Video heartbeat error:', err);
+  });
+}
+
+// ==================== FULLSCREEN MANAGEMENT ====================
+function forceFullscreen() {
+  const elem = document.documentElement;
+  const fullscreenFunc = elem.requestFullscreen || 
+                        elem.mozRequestFullScreen || 
+                        elem.webkitRequestFullscreen || 
+                        elem.msRequestFullscreen;
+  
+  if (fullscreenFunc) {
+    fullscreenFunc.call(elem).catch(err => {
+      console.error('Fullscreen error:', err);
+    });
   }
 }
 
-// Minta Wake Lock saat halaman pertama kali dimuat
-requestWakeLock();
-
-// Re-request Wake Lock jika halaman kembali aktif
-document.addEventListener('visibilitychange', async () => {
+// ==================== PROTECTION LAYERS ====================
+document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') {
-    await requestWakeLock(); // Minta ulang Wake Lock saat halaman aktif
-  } else if (wakeLock !== null) {
-    // Jika halaman tidak aktif, lepaskan Wake Lock
-    wakeLock.release();
-    wakeLock = null;
+    enableAggressiveWakeLock();
+    forceFullscreen();
   }
 });
+
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) {
+    forceFullscreen();
+  }
+});
+
+// ==================== INITIALIZATION ====================
+document.addEventListener('DOMContentLoaded', () => {
+  // Delay untuk bypass TV restrictions
+  setTimeout(() => {
+    enableAggressiveWakeLock();
+    forceFullscreen();
+    
+    // Force fullscreen setiap 30 detik
+    setInterval(() => {
+      if(!document.fullscreenElement) {
+        forceFullscreen();
+      }
+    }, 30000);
+    
+    // Trigger initial interaction
+    const fakeEvent = new KeyboardEvent('keydown', {
+      key: ' ',
+      bubbles: true
+    });
+    document.dispatchEvent(fakeEvent);
+  }, 1500);
+});
+
+// ==================== FALLBACK PROTECTION ====================
+// Canvas animation sebagai cadangan
+const canvas = document.createElement('canvas');
+canvas.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;';
+document.body.appendChild(canvas);
+
+(function animate() {
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
+  ctx.fillRect(0, 0, 1, 1);
+  requestAnimationFrame(animate);
+})();
+/////////////// AKHIR FUNGSI WAKE LOCK //////////////////
 
 
 
