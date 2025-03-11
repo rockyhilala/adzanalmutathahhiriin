@@ -764,7 +764,7 @@ justify-content: center;
   <script>
 
 
-//////////FRAME UNTUK VIDEO LIVE MEKKAH////////////
+//////////AWAL FRAME UNTUK VIDEO LIVE MEKKAH////////////
 document.getElementById('playEmergencyVideo').addEventListener('click', function() {
     // Tutup semua menu offcanvas
     const offcanvasInstances = document.querySelectorAll('.offcanvas');
@@ -807,12 +807,116 @@ document.getElementById('videoOverlay').addEventListener('click', function(e) {
     }
 });
 
+//////////AKHIR FRAME UNTUK VIDEO LIVE MEKKAH////////////
+
 
     // Inisialisasi jadwal sebagai objek kosong; nanti akan di-update otomatis
     let adzanSchedule = {};
     let adzanCountdownDurations = {};
     let iqamahCountdownDurations = {};
     let overlayBlackDurations = {};
+
+////////////////AWAL FUNGSI DATA MASJID SPREADSHEET/////////////////////////////////////////
+// Fungsi untuk mengambil Data Masjid dari Google Spreadsheet
+function fetchMasjidData() {
+    const appsScriptUrl = "https://script.google.com/macros/s/AKfycbwTQkFerJ4CdIY7yNs2Z4MuGDUPUBfvNrfAovKu1hqNkWn-TrMvo3DIyv9PVtPxmaFJyA/exec?type=datamasjid";
+
+    fetch(appsScriptUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (!data || Object.keys(data).length === 0) {
+                console.error("Error: Data Masjid dari Spreadsheet kosong atau tidak terbaca.");
+                return;
+            }
+
+            console.log("Data Masjid berhasil diperbarui:", data);
+
+            // ✅ Perbarui UI berdasarkan data yang diterima
+            document.getElementById("masjidName").innerText = data.NamaMasjid || "Nama Masjid";
+            document.getElementById("masjidAddress").innerText = data.Alamat || "Alamat Masjid";
+            document.getElementById("masjidLogo").src = data.Logo || "logo.png";
+
+            // ✅ Tampilkan logo dari spreadsheet
+            const logoUrl = data.Logo || "logo.png";
+            document.getElementById("masjidLogo").src = logoUrl;
+            document.getElementById("logoPreview").innerHTML = `<img src="${logoUrl}" alt="Logo Preview" style="max-width: 100%; max-height: 150px;">`;
+
+            // ✅ Perbarui form input dengan data terbaru
+            document.getElementById("namaMasjidInput").value = data.NamaMasjid || "";
+            document.getElementById("alamatMasjidInput").value = data.Alamat || "";
+        })
+        .catch(err => console.error("Error fetching Masjid data:", err));
+}
+
+// Fungsi untuk mengupdate Data Masjid ke Google Spreadsheet
+function updateMasjidData(data) {
+    const appsScriptUrl = "https://script.google.com/macros/s/AKfycbwTQkFerJ4CdIY7yNs2Z4MuGDUPUBfvNrfAovKu1hqNkWn-TrMvo3DIyv9PVtPxmaFJyA/exec";
+
+    fetch(appsScriptUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        mode: 'no-cors',  // Ini penting agar Apps Script tidak memblokir request
+        credentials: 'omit', // Mencegah pengiriman cookie/session
+        body: JSON.stringify({...data, type: "datamasjid"}),
+    })
+    .then(response => response.json())
+    .then(responseData => {
+        console.log("Data Masjid telah diperbarui:", responseData);
+        fetchMasjidData(); // ✅ Ambil ulang data agar UI tetap konsisten
+    })
+    .catch(err => console.error("Error updating Masjid data:", err));
+}
+
+// Event Listener untuk Form Data Masjid
+document.getElementById('masjidDataForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const namaMasjid = document.getElementById('namaMasjidInput').value.trim();
+    const alamatMasjid = document.getElementById('alamatMasjidInput').value.trim();
+    const logoMasjid = document.getElementById('masjidLogo').src || "logo.png";
+    
+    const data = {
+        type: "datamasjid",
+        NamaMasjid: namaMasjid,
+        Alamat: alamatMasjid,
+        Logo: logoMasjid
+    };
+
+    // Kirim data ke Google Spreadsheet
+    updateMasjidData(data);
+    
+    // Tutup offcanvas setelah update berhasil
+    const offcanvasMasjidEl = document.getElementById('offcanvasDataMasjid');
+    const bsOffcanvasMasjid = bootstrap.Offcanvas.getInstance(offcanvasMasjidEl);
+    if (bsOffcanvasMasjid) {
+        bsOffcanvasMasjid.hide();
+    }
+    bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('mainOffcanvasMenu')).show();
+});
+
+// Ambil data saat halaman dimuat
+document.addEventListener('DOMContentLoaded', fetchMasjidData);
+////////////////////////////////////////////////////////////////////////
+    // Preview logo ketika file di-upload
+    document.getElementById('logoInput').addEventListener('change', function(e) {
+    const file = this.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const base64Image = e.target.result;
+            document.getElementById('logoPreview').innerHTML = `<img src="${base64Image}" alt="Logo Preview" style="max-width: 100%; max-height: 150px;">`;
+            document.getElementById('masjidLogo').src = base64Image; // Update logo di header
+        };
+        reader.readAsDataURL(file);
+    } else {
+        document.getElementById('logoPreview').innerHTML = '';
+    }
+});
+
+////////////////AKHIR FUNGSI DATA MASJID SPREADSHEET/////////////////////////////////////////
+
 
 
 ////////////////AWAL FUNGSI IQAMAH SPREADSHEET/////////////////////////////////////////
@@ -935,6 +1039,7 @@ document.getElementById('videoOverlay').addEventListener('click', function(e) {
               document.getElementById('dzuhurAdzanCountdown').value = data.Dzuhur || 10;
               document.getElementById('asharAdzanCountdown').value = data.Ashar || 10;
               document.getElementById('maghribAdzanCountdown').value = data.Maghrib || 10;
+              document.getElementById('jumatAdzanCountdown').value = data.Jumat || 10;
 
                     adzanCountdownDurations = {
                         isya: parseInt(data.Isya) || 10,
@@ -1209,21 +1314,6 @@ document.addEventListener('DOMContentLoaded', fetchBlackOverlayData);
         .then(response => response.json())
         .then(data => {
             cachedData = data; // Simpan data ke cache
-        // Update DataMasjid
-        if (data.DataMasjid) {
-            if (!localStorage.getItem('masjidData')) {
-            document.getElementById("masjidName").innerText = data.DataMasjid["Nama Masjid"];
-            document.getElementById("masjidAddress").innerText = data.DataMasjid["Alamat"];
-            document.getElementById("masjidLogo").src = data.DataMasjid["Logo"];
-            } else {
-            // Jika ada data di localStorage, gunakan itu
-            var masjidData = JSON.parse(localStorage.getItem('masjidData'));
-            document.getElementById("masjidName").innerText = masjidData.namaMasjid;
-            document.getElementById("masjidAddress").innerText = masjidData.alamatMasjid;
-            document.getElementById("masjidLogo").src = masjidData.logo;
-            }
-        }
-
         // Update DataMedia (carousel)
         if (data.DataMedia) {
             let indicatorsHtml = "";
@@ -1458,7 +1548,7 @@ function updatePrayerTimes() {
     if (autoSchedule.hasOwnProperty(prayer)) {
       const [hours, minutes] = autoSchedule[prayer].split(":").map(Number);
       const date = new Date();
-      date.setHours(hours, minutes + 2, 0); // Tambah 2 menit
+      date.setHours(hours, minutes + 3, 0); // Tambah 2 menit
       autoSchedule[prayer] = 
         date.getHours().toString().padStart(2, '0') + ':' + 
         date.getMinutes().toString().padStart(2, '0');
@@ -1711,91 +1801,6 @@ function showBlackOverlay(duration) {
         }
       });
     }, 1000);
-
-
-
-
-
-
-
-
-    // ==================== FUNGSI BARU UNTUK FORM DATA MASJID ====================
-    // Preview logo ketika file di-upload
-    document.getElementById('logoInput').addEventListener('change', function(e) {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById('logoPreview').innerHTML = '<img src="' + e.target.result + '" alt="Logo Preview" style="max-width: 100%; max-height: 150px;">';
-        };
-        reader.readAsDataURL(file);
-      } else {
-        document.getElementById('logoPreview').innerHTML = '';
-      }
-    });
-
-    // Simpan data Masjid ke localStorage dan update UI tanpa refresh
-    document.getElementById('masjidDataForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      let logoSrc = '';
-      const logoPreviewImg = document.querySelector('#logoPreview img');
-      if (logoPreviewImg) {
-        logoSrc = logoPreviewImg.src;
-      } else {
-        logoSrc = document.getElementById('masjidLogo').src;
-      }
-      const namaMasjid = document.getElementById('namaMasjidInput').value;
-      const alamatMasjid = document.getElementById('alamatMasjidInput').value;
-      const masjidData = {
-        namaMasjid: namaMasjid,
-        alamatMasjid: alamatMasjid,
-        logo: logoSrc
-      };
-      localStorage.setItem('masjidData', JSON.stringify(masjidData));
-      document.getElementById('masjidName').innerText = namaMasjid;
-      document.getElementById('masjidAddress').innerText = alamatMasjid;
-      document.getElementById('masjidLogo').src = logoSrc;
-      const offcanvasDataMasjidEl = document.getElementById('offcanvasDataMasjid');
-      const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasDataMasjidEl);
-      if (bsOffcanvas) {
-        bsOffcanvas.hide();
-      }
-    });
-
-    // Reset Data Masjid: hapus localStorage dan ambil data dari spreadsheet
-    document.getElementById('resetMasjidData').addEventListener('click', function(e) {
-      localStorage.removeItem('masjidData');
-
-        // Kosongkan input form: logo, nama masjid, dan alamat masjid
-        document.getElementById('namaMasjidInput').value = "";
-        document.getElementById('alamatMasjidInput').value = "";
-        document.getElementById('logoInput').value = "";
-        document.getElementById('logoPreview').innerHTML = "";
-
-      fetch(appsScriptUrl)
-        .then(response => response.json())
-        .then(data => {
-            // Update DataMasjid: hanya update dari spreadsheet jika localStorage belum ada data
-            if (data.DataMasjid) {
-            if (!localStorage.getItem('masjidData')) {
-                document.getElementById("masjidName").innerText = data.DataMasjid["Nama Masjid"];
-                document.getElementById("masjidAddress").innerText = data.DataMasjid["Alamat"];
-                document.getElementById("masjidLogo").src = data.DataMasjid["Logo"];
-            } else {
-                // Jika ada data di localStorage, gunakan itu
-                var masjidData = JSON.parse(localStorage.getItem('masjidData'));
-                document.getElementById("masjidName").innerText = masjidData.namaMasjid;
-                document.getElementById("masjidAddress").innerText = masjidData.alamatMasjid;
-                document.getElementById("masjidLogo").src = masjidData.logo;
-            }
-            }
-        })
-        .catch(err => {
-          console.error("Error fetching masjid data on reset:", err);
-        });
-    });
-    // ==================== END FUNGSI FORM DATA MASJID ====================
-
 
 //--- FUNGSI UPDATE/EDIT WAKTU ADZAN
 
@@ -2264,7 +2269,6 @@ fetch(appsScriptUrl, {
   .catch(err => {
     console.error("Error fetching data:", err);
   });
-
 
 </script>
 </body>
