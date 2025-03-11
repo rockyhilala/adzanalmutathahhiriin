@@ -875,7 +875,7 @@ document.getElementById('masjidDataForm').addEventListener('submit', function(e)
     
     const namaMasjid = document.getElementById('namaMasjidInput').value.trim();
     const alamatMasjid = document.getElementById('alamatMasjidInput').value.trim();
-    const logoMasjid = document.getElementById('masjidLogo').src || "logo.png";
+    const logoMasjid = document.getElementById('masjidLogo').src = logoUrl + "?t=" + new Date().getTime();
     
     const data = {
         type: "datamasjid",
