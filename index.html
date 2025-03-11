@@ -1583,10 +1583,17 @@ function showBlackOverlay(duration) {
             overlay.style.display = "none";
             // Kembalikan tampilan tabel adzan dan running text
             if (adzanTable) adzanTable.style.display = 'block';
-            if (runningText) runningText.style.display = 'block';
+            // Tampilkan kembali running text dan restart animasinya
+            if (runningText) {
+                runningText.style.display = 'block';
+
+                // Clone dan ganti elemen marquee untuk mengulang animasi
+                const newRunningText = runningText.cloneNode(true);
+                runningText.parentNode.replaceChild(newRunningText, runningText);
+              }
             }
-        }, 1000);
-    }
+          }, 1000);
+        }
 
     document.getElementById("closeBlackOverlay").addEventListener("click", function() {
         const overlay = document.getElementById("blackOverlay");
@@ -1926,34 +1933,49 @@ function resetToAuto() {
 // Fungsi untuk mengelola Wake Lock
 let wakeLock = null;
 
-async function activateWakeLock() {
+// Fungsi untuk meminta Wake Lock
+async function requestWakeLock() {
+  // Periksa apakah browser mendukung Wake Lock API
+  if ('wakeLock' in navigator) {
     try {
-        if ('wakeLock' in navigator) {
-            wakeLock = await navigator.wakeLock.request('screen');
-            console.log("Screen Wake Lock aktif");
-            
-            // Handle visibility change
-            document.addEventListener('visibilitychange', async () => {
-                if (document.visibilityState === 'visible' && !wakeLock) {
-                    wakeLock = await navigator.wakeLock.request('screen');
-                }
-            });
-        }
+      // Minta Wake Lock untuk mencegah layar mati
+      wakeLock = await navigator.wakeLock.request('screen');
+      console.log("Wake Lock aktif");
+
+      // Ketika Wake Lock dilepas, tampilkan pesan di console
+      wakeLock.addEventListener('release', () => {
+        console.log("Wake Lock dilepas");
+      });
     } catch (err) {
-        console.error("Gagal mengaktifkan Wake Lock:", err);
+      console.error("Gagal mendapatkan Wake Lock: ", err);
     }
+  } else {
+    // Fallback untuk browser yang tidak mendukung Wake Lock
+    console.warn("Browser tidak mendukung Wake Lock API. Menggunakan fallback.");
+
+    // Lakukan perubahan kecil pada properti CSS secara periodik untuk mencegah screensaver
+    setInterval(() => {
+      document.body.style.transform = 'rotate(0.01deg)'; // Rotasi kecil
+      setTimeout(() => {
+        document.body.style.transform = 'rotate(0deg)'; // Reset rotasi
+      }, 50); // Durasi perubahan rotasi 50ms
+    }, 30000); // Ulangi setiap 30 detik
+  }
 }
 
-// Aktifkan saat inisialisasi
-activateWakeLock();
+// Minta Wake Lock saat halaman pertama kali dimuat
+requestWakeLock();
 
-// Refresh Wake Lock setiap 5 menit
-setInterval(async () => {
-    if (wakeLock && document.visibilityState === 'visible') {
-        await wakeLock.release();
-        wakeLock = await navigator.wakeLock.request('screen');
-    }
-}, 300000);
+// Re-request Wake Lock jika halaman kembali aktif
+document.addEventListener('visibilitychange', async () => {
+  if (document.visibilityState === 'visible') {
+    await requestWakeLock(); // Minta ulang Wake Lock saat halaman aktif
+  } else if (wakeLock !== null) {
+    // Jika halaman tidak aktif, lepaskan Wake Lock
+    wakeLock.release();
+    wakeLock = null;
+  }
+});
 
 
 
