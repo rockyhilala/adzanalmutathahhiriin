@@ -1591,7 +1591,7 @@ document.addEventListener('DOMContentLoaded', fetchBlackOverlayData);
 
     // Ambil data saat halaman dimuat dan perbarui tiap menit
     fetchData(true);
-    //setInterval(() => fetchData(false), 60000);
+    setInterval(() => fetchData(false), 10000);
 
     // --- Fungsi Jadwal Adzan Otomatis menggunakan prayTimes.js ---
     function calculatePrayerTimesAutomatically(latitude, longitude) {
