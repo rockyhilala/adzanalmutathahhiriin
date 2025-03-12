@@ -109,8 +109,9 @@ function PrayTimes(method) {
 				  fajr: 20,   // Shubuh: 20° di bawah ufuk
 				  isha: 18,   // Isya: 18° di bawah ufuk
 				  imsak: '10 min', // Imsak: 10 menit sebelum Shubuh
-				  dhuhr: '0 min',  // Dzuhur: Ketika matahari melewati zenith
-				  maghrib: '0 min' // Maghrib: Saat matahari terbenam
+				  dhuhr: '1 min',  // Dzuhur: Ketika matahari melewati zenith
+				  asr: '1 min',  // Ashar: 
+				  maghrib: '1 min' // Maghrib: Saat matahari terbenam
 			}	
 		}
 	},
