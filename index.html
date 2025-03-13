@@ -373,6 +373,10 @@
       <!-- Kanan: Jam dan Tombol Burger -->
       <div class="col-12 col-md-4 d-flex justify-content-end align-items-center" style="z-index: 10001; display: none;">
         <div id="clock" class="me-2" style="font-size: 40px;"></div>
+        <!-- Tombol Refresh (Default: Tersembunyi) -->
+        <button id="refreshButton" class="btn btn-outline-light me-2">
+          ↻
+        </button>
         <button id="hamburgerMenu" class="btn btn-outline-light" data-bs-toggle="offcanvas" data-bs-target="#mainOffcanvasMenu">
           ☰
         </button>
@@ -817,6 +821,22 @@
   
   <!-- Script JavaScript -->
   <script>
+
+///////////////////FUNGSI UNTUK REFRESH MANUAL////////////
+// Pastikan tombol tersedia sebelum menambahkan event listener
+document.addEventListener("DOMContentLoaded", function() {
+    const refreshButton = document.getElementById("refreshButton");
+
+    if (refreshButton) {
+        refreshButton.addEventListener("click", function() {
+            console.log("Tombol refresh diklik! Halaman akan di-refresh...");
+            location.reload(); // Perintah untuk merefresh halaman
+        });
+    } else {
+        console.error("Tombol refresh tidak ditemukan di DOM!");
+    }
+});
+///////////////////FUNGSI UNTUK REFRESH MANUAL////////////
 
 //////////AWAL FUNGSI UNTUK RADIO////////////
 // Variabel untuk melacak radio yang sedang diputar
