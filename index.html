@@ -955,8 +955,11 @@ function fetchMasjidData() {
                 logoUrl = data.Logo || "logo.png";
             }
             document.getElementById("masjidLogo").src = logoUrl;
-            document.getElementById("logoPreview").innerHTML = `<img src="${logoUrl}" alt="Logo Preview" style="max-width: 100%; max-height: 150px;">`;
-
+            if (document.getElementById("logoPreview")) {
+              document.getElementById("logoPreview").innerHTML = logoUrl ? 
+                `<img src="${logoUrl}" alt="Logo Preview" style="max-width: 100%; max-height: 150px;">` : 
+                '';
+            }
             // Update form input (kecuali logo)
             document.getElementById("namaMasjidInput").value = data.NamaMasjid || "";
             document.getElementById("alamatMasjidInput").value = data.Alamat || "";
@@ -1398,11 +1401,25 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     // Cek jika hari Jumat (getDay(): 5 adalah Jumat)
-    const today = new Date();
-    if(today.getDay() === 5) {
-      document.getElementById("thDzuhur").innerText = "Jumat";
-      iqamahDurations.dzuhur = 40;
-    }
+    document.addEventListener("DOMContentLoaded", function() {
+        const today = new Date();
+        
+        if (today.getDay() === 5) { // 5 adalah Jumat
+            const thDzuhur = document.getElementById("thDzuhur");
+            if (thDzuhur) {
+                thDzuhur.innerText = "Jumat";
+            }
+
+            // Pastikan iqamahDurations sudah dideklarasikan sebelumnya
+            if (typeof iqamahDurations === "undefined") {
+                iqamahDurations = {};
+            }
+
+            // Set durasi Iqamah khusus untuk Jumat (misalnya 40 menit)
+            iqamahDurations.dzuhur = 40;
+        }
+    });
+
 
     // Fungsi update jam berjalan
     function updateClock() {
@@ -1748,9 +1765,9 @@ function timeStringToDate(timeStr) {
 // Fungsi untuk menampilkan popup
 function showPopupAdzan(prayer) {
   // Jika hari Jumat dan parameter adalah "dzuhur", ubah menjadi "jumat"
-  if (new Date().getDay() === 5 && prayer === "dzuhur") {
-    prayer = "jumat";
-  }
+  if (new Date().getDay() === 5 && prayer.toLowerCase() === "dzuhur") {
+        prayer = "jumat";
+    }
   if (window.popupAdzanActive) return;
     window.popupAdzanActive = true;
 
@@ -1797,9 +1814,7 @@ function showPopupAdzan(prayer) {
         // ✅ Jika hari Jumat, paksa teks menjadi "Waktu Adzan Jumat segera tiba"
         if (prayer.toLowerCase() === "jumat") {
             popupText.innerText = "Waktu Adzan Jumat segera tiba";
-        } else {
-            popupText.innerText = "Waktu Adzan " + prayer.charAt(0).toUpperCase() + prayer.slice(1) + " segera tiba";
-        }
+        } 
 
         if (countdown <= 0) {
             clearInterval(window.adzanCountdownInterval);
@@ -1826,7 +1841,13 @@ function showPopupAdzan(prayer) {
                     popup.style.display = "none";
                     popupOverlay.style.display = "none";
                     window.popupAdzanActive = false;
-                    startIqamahCountdown(prayer);
+                    if (prayer.toLowerCase() === "jumat") {
+                        // Langsung ke overlay hitam untuk Jumat
+                        let overlayDuration = overlayBlackDurations["jumat"] * 60;
+                        showBlackOverlay(overlayDuration);
+                    } else {
+                        startIqamahCountdown(prayer);
+                    }
                 }, 10000);
             } else {
                 // ✅ Khusus untuk Jumat: langsung tampilkan overlay hitam tanpa iqamah
@@ -2176,7 +2197,7 @@ let autoMode = true;
 document.getElementById('toggleModeBtn').addEventListener('click', () => {
   autoMode = !autoMode;
   const btn = document.getElementById('toggleModeBtn');
-  btn.textContent = autoMode ? 'Mode Otomatis' : 'Mode Manual';
+  btn.textContent = autoMode ? 'Mode Otomatis Aktif' : 'ingin Reset Waktu ?';
   
   if (autoMode) {
     localStorage.removeItem('manualPrayerTimes');
