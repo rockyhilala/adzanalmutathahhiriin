@@ -796,6 +796,12 @@
     </div>
   </div>
 
+  <!-- Popup Notifikasi -->
+  <div id="successPopup" class="position-fixed top-50 start-50 translate-middle bg-success text-white p-3 rounded shadow-lg"
+  style="display: none; z-index: 99999; font-size: 18px;">
+      Data berhasil disimpan!
+  </div>
+
   <!-- Audio -->
   <audio id="audioShalawat" src="shalawat.m4a" loop></audio>
   <audio id="audioAdzan" src="adzan.mp3"></audio>
@@ -1377,21 +1383,29 @@ document.addEventListener('DOMContentLoaded', fetchBlackOverlayData);
 ////////////////AKHIR FUNGSI COUNTDOWN BLACK OVERLAY SPREADSHEET/////////////////////////////////////////
 
 
+//////////////AWAL FUNGSI TOMBOL KIRIM DATA////////////////////
+
 document.addEventListener("DOMContentLoaded", function() {
-    // Ambil semua form dalam halaman
     const forms = document.querySelectorAll("form");
 
     forms.forEach(form => {
         form.addEventListener("submit", function(event) {
-            event.preventDefault(); // Mencegah submit default agar dapat ditangani manual
-            
-            // Lakukan submit form seperti biasa
+            event.preventDefault(); // Mencegah submit default
+
+            // Tampilkan popup notifikasi
+            const successPopup = document.getElementById("successPopup");
+            successPopup.style.display = "block";
+
+            // Sembunyikan popup setelah 2 detik dan reload halaman
             setTimeout(() => {
-                location.reload(); // Reload halaman setelah submit
-            }, 1000); // Bisa disesuaikan delay-nya jika diperlukan
+                successPopup.style.display = "none";
+                location.reload();
+            }, 2000); // Reload setelah 2 detik
         });
     });
 });
+
+//////////////AKHIR FUNGSI TOMBOL KIRIM DATA////////////////////
 
 
     // Global flag untuk mencegah popup adzan dipicu berkali-kali
