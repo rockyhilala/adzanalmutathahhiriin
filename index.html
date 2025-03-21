@@ -1455,16 +1455,87 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 
-    // Fungsi update jam berjalan
-    function updateClock() {
-      const now = new Date();
-      const hours = now.getHours().toString().padStart(2, '0');
-      const minutes = now.getMinutes().toString().padStart(2, '0');
-      const seconds = now.getSeconds().toString().padStart(2, '0');
-      document.getElementById('clock').innerText = hours + ':' + minutes + ':' + seconds;
+// Variabel flag agar popup hanya dipicu satu kali per waktu
+let imsakPopupTriggered = false;
+let syuruqPopupTriggered = false;
+let isPageReloaded = false; // Flag untuk memastikan reload hanya sekali
+
+// Pastikan refreshButton disembunyikan terlebih dahulu setelah halaman dimuat
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("refreshButton").style.display = "none";
+});
+
+// Fungsi untuk mengecek apakah saat ini waktunya imsak atau syuruq
+function checkPopup() {
+    const now = new Date();
+    const currentTime = now.toTimeString().slice(0, 5); // format HH:MM
+
+    const imsakTime = document.getElementById('timeImsak').innerText.trim();
+    const syuruqTime = document.getElementById('timeSyuruq').innerText.trim();
+
+    // Pastikan waktu sudah ter-update (tidak "--:--")
+    if (imsakTime !== "--:--" && !imsakPopupTriggered && currentTime === imsakTime) {
+        triggerPopup("Imsak");
+        imsakPopupTriggered = true;
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+
+    if (syuruqTime !== "--:--" && !syuruqPopupTriggered && currentTime === syuruqTime) {
+        triggerPopup("Syuruq");
+        syuruqPopupTriggered = true;
+    }
+}
+
+// Fungsi untuk menampilkan popup dengan durasi 20 detik, memainkan audio sesuai dan menampilkan refreshButton setelahnya
+function triggerPopup(type) { 
+    const popup = document.getElementById("popupAdzan"); 
+    const popupText = document.getElementById("popupAdzanText"); 
+
+    // Tampilkan pesan dan mainkan audio sesuai tipe popup
+    if (type === "Imsak") { 
+        popupText.innerText = "Waktunya Imsak"; 
+        document.getElementById("audioRooster").play(); 
+    } else if (type === "Syuruq") { 
+        popupText.innerText = "Waktunya Syuruq"; 
+        document.getElementById("audioBeep").play(); 
+    } 
+
+    // Tampilkan popup
+    popup.style.display = "block"; 
+
+    // Setelah 60 detik, sembunyikan popup dan reload halaman jika belum di-reload
+    setTimeout(function() { 
+        popup.style.display = "none";
+
+        // Hanya reload jika halaman belum pernah di-reload
+        if (!isPageReloaded) {
+            isPageReloaded = true;
+            location.reload(); 
+        }
+    }, 60000); 
+}
+
+
+
+// Fungsi untuk memperbarui jam dan memeriksa apakah waktunya popup
+function updateClock() {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+
+    // Update tampilan jam di elemen dengan id 'clock'
+    document.getElementById('clock').innerText = `${hours}:${minutes}:${seconds}`;
+
+    // Panggil fungsi cek popup setiap detik
+    checkPopup();
+}
+
+// Set interval untuk memperbarui jam dan memeriksa popup tiap detik
+setInterval(updateClock, 1000);
+
+// Panggil updateClock segera untuk menampilkan jam saat halaman pertama kali dimuat
+updateClock();
+
 
     // Fungsi update tanggal dan kalender Hijriyah
     function updateDate() {
@@ -1794,15 +1865,21 @@ function timeStringToDate(timeStr) {
 
 
 
+
+
+
 /////////// AWAL FUNGSI POPUP DAN MP3 COUNTDOWN ADZAN /////////// 
 // --- Popup dan Countdown untuk ADZAN ---
 // Fungsi untuk menampilkan popup
 function showPopupAdzan(prayer) {
-  // Jika hari Jumat dan parameter adalah "dzuhur", ubah menjadi "jumat"
-  if (new Date().getDay() === 5 && prayer.toLowerCase() === "dzuhur") {
+    // Jika hari Jumat dan parameter adalah "dzuhur", ubah menjadi "jumat"
+    if (new Date().getDay() === 5 && prayer.toLowerCase() === "dzuhur") {
         prayer = "jumat";
     }
-  if (window.popupAdzanActive) return;
+
+    // Jika popup Adzan sedang aktif, hentikan fungsi
+    if (window.popupAdzanActive) return;
+
     window.popupAdzanActive = true;
 
     const popup = document.getElementById("popupAdzan");
@@ -1810,92 +1887,97 @@ function showPopupAdzan(prayer) {
     const popupCountdown = document.getElementById("popupCountdown");
     const popupOverlay = document.getElementById("popupOverlay");
 
+    // Ambil durasi countdown dari variabel global atau fallback ke nilai dari form
     let countdown = adzanCountdownDurations[prayer.toLowerCase()];
-
-    // ✅ Ambil nilai terbaru dari form jika undefined
     if (countdown === undefined || isNaN(countdown)) {
         countdown = parseInt(document.getElementById(`${prayer.toLowerCase()}AdzanCountdown`).value);
-        if (isNaN(countdown)) countdown = 10; // Default backup
+        if (isNaN(countdown)) countdown = 10; // default 10 menit
     }
-
     countdown *= 60; // Konversi ke detik
+
+    // Tampilkan popup dengan styling yang telah ditentukan
     popup.classList.remove("p-3");
     popup.classList.add("p-5", "fs-2");
     popup.style.display = "block";
     popupOverlay.style.display = "block";
 
-    // ✅ Pastikan hanya satu audio yang diputar
-    document.getElementById("audioRadio").pause();
-    document.getElementById("audioRadio").currentTime = 0;
-    document.getElementById("audioShalawat").pause();
-    document.getElementById("audioShalawat").currentTime = 0;
-    document.getElementById("audioAdzan").pause();
-    document.getElementById("audioAdzan").currentTime = 0;
+    // Set teks popup sesuai permintaan
+    popupText.innerText = "Waktu Adzan " + prayer.charAt(0).toUpperCase() + prayer.slice(1) + " segera tiba";
 
-    // ✅ Jika Maghrib, putar radio; selain itu, putar shalawat
+    // Pastikan audio lain dihentikan terlebih dahulu
+    stopAllAudio();
+
+    // Tentukan audio yang akan dimainkan berdasarkan jenis adzan
     if (prayer.toLowerCase() === "maghrib") {
         document.getElementById("audioRadio").play();
     } else if (prayer.toLowerCase() !== "jumat") {
         document.getElementById("audioShalawat").play();
     }
 
+    // Mulai interval countdown untuk mengupdate tampilan timer
     window.adzanCountdownInterval = setInterval(() => {
         countdown--;
         const minutes = Math.floor(countdown / 60);
         const seconds = countdown % 60;
         popupCountdown.innerText = minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
 
-        // ✅ Jika hari Jumat, paksa teks menjadi "Waktu Adzan Jumat segera tiba"
-        if (prayer.toLowerCase() === "jumat") {
-            popupText.innerText = "Waktu Adzan Jumat segera tiba";
-        } 
-
         if (countdown <= 0) {
             clearInterval(window.adzanCountdownInterval);
             window.adzanCountdownInterval = null;
 
-            // ✅ Hentikan radio jika Maghrib
-            if (prayer.toLowerCase() === "maghrib") {
-                document.getElementById("audioRadio").pause();
-                document.getElementById("audioRadio").currentTime = 0;
-            }        
-
-            if (prayer.toLowerCase() !== "jumat") {
-                popupText.innerText = "Waktunya Adzan " + prayer.charAt(0).toUpperCase() + prayer.slice(1) + " untuk wilayah Tapa dan sekitarnya";
-
-                // ✅ Hentikan shalawat dan putar Adzan
-                document.getElementById("audioShalawat").pause();
-                document.getElementById("audioShalawat").currentTime = 0;
-                if (document.getElementById("audioAdzan").paused) {
-                    document.getElementById("audioAdzan").play();
-                }
-
-                // ✅ Lanjut ke countdown iqamah setelah 10 detik
-                setTimeout(() => {
-                    popup.style.display = "none";
-                    popupOverlay.style.display = "none";
-                    window.popupAdzanActive = false;
-                    if (prayer.toLowerCase() === "jumat") {
-                        // Langsung ke overlay hitam untuk Jumat
-                        let overlayDuration = overlayBlackDurations["jumat"] * 60;
-                        showBlackOverlay(overlayDuration);
-                    } else {
-                        startIqamahCountdown(prayer);
-                    }
-                }, 10000);
-            } else {
-                // ✅ Khusus untuk Jumat: langsung tampilkan overlay hitam tanpa iqamah
-                let overlayDuration = overlayBlackDurations["jumat"] * 60;
-                showBlackOverlay(overlayDuration);
-                setTimeout(() => {
-                    popup.style.display = "none";
-                    popupOverlay.style.display = "none";
-                    window.popupAdzanActive = false;
-                }, 10000);
-            }
+            // Hentikan audio dan kelola popup setelah countdown
+            manageAudioAndPopup(prayer, popup, popupOverlay);
         }
     }, 1000);
 }
+
+// Fungsi untuk menghentikan semua audio
+function stopAllAudio() {
+    document.getElementById("audioRadio").pause();
+    document.getElementById("audioRadio").currentTime = 0;
+    document.getElementById("audioShalawat").pause();
+    document.getElementById("audioShalawat").currentTime = 0;
+    document.getElementById("audioAdzan").pause();
+    document.getElementById("audioAdzan").currentTime = 0;
+}
+
+// Fungsi untuk mengelola audio dan popup setelah countdown selesai
+function manageAudioAndPopup(prayer, popup, popupOverlay) {
+    // Untuk Maghrib, hentikan audio radio
+    if (prayer.toLowerCase() === "maghrib") {
+        document.getElementById("audioRadio").pause();
+        document.getElementById("audioRadio").currentTime = 0;
+    }
+
+    if (prayer.toLowerCase() !== "jumat") {
+        // Hentikan audio shalawat dan putar audio adzan
+        document.getElementById("audioShalawat").pause();
+        document.getElementById("audioShalawat").currentTime = 0;
+        if (document.getElementById("audioAdzan").paused) {
+            document.getElementById("audioAdzan").play();
+        }
+
+        // Setelah 10 detik, sembunyikan popup dan lanjutkan ke countdown iqamah
+        setTimeout(() => {
+            popup.style.display = "none";
+            popupOverlay.style.display = "none";
+            window.popupAdzanActive = false;
+            startIqamahCountdown(prayer);
+        }, 10000);
+    } else {
+        // Untuk Jumat, langsung tampilkan overlay hitam tanpa iqamah
+        let overlayDuration = overlayBlackDurations["jumat"] * 60;
+        showBlackOverlay(overlayDuration);
+
+        setTimeout(() => {
+            popup.style.display = "none";
+            popupOverlay.style.display = "none";
+            window.popupAdzanActive = false;
+            location.reload();
+        }, 10000);
+    }
+}
+
 /////////// AKHIR FUNGSI POPUP DAN MP3 COUNTDOWN ADZAN ///////////
      
       
@@ -1988,7 +2070,7 @@ function showBlackOverlay(duration) {
                 const newRunningText = runningText.cloneNode(true);
                 runningText.parentNode.replaceChild(newRunningText, runningText);
               }
-
+              location.reload();
               highlightNextPrayer();
 
             }
@@ -2621,6 +2703,7 @@ fetch(appsScriptUrl, {
       updateOverlay();
     }
   });
+
 
 </script>
 </body>
